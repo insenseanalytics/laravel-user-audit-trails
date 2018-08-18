@@ -40,5 +40,6 @@
                 "Insense\\LaravelUserAuditTrails\\UserTrailsServiceProvider"
             ]
         }
-    }
+    },
+    "prefer-stable": true
 }
