@@ -21,7 +21,7 @@ class Post extends \Illuminate\Database\Eloquent\Model
 That's it! Now, sit back and observe the magic of audit user trails. When a new record is created, `created_by` will be updated to the user ID that created it. When a record is updated, `updated_by` will be updated to the user ID that updated it.
 
 ## Requirements
-- [PHP >= 7.0](http://php.net/)
+- [PHP >= 7.1](http://php.net/)
 - [Laravel 5.5|5.6](https://github.com/laravel/framework)
 
 ## Quick Installation
