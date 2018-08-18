@@ -2,6 +2,8 @@
 
 ![Travis (.org)](https://img.shields.io/travis/insenseanalytics/laravel-user-audit-trails/master.svg)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://packagist.org/packages/insenseanalytics/laravel-user-audit-trails)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/?branch=master)
+[![Code Intelligence Status](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 
 This package is created to add audit user trails by using Laravel Eloquent ORM. Using this package, you would be able to record in the respective database tables, the `created_by` and `updated_by` user IDs.
 
