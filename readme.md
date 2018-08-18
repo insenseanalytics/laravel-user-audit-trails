@@ -58,7 +58,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 Next, override the static properties `CREATED_BY` and `UPDATED_BY` in your model (that extends the base model) like so:
 
 ```php
-class BaseModel extends BaseModel
+class YourModel extends BaseModel
 {
     public static $CREATED_BY = 'your-created-by-column';
     public static $UPDATED_BY = 'your-updated-by-column';
@@ -76,7 +76,7 @@ The example above omits the updated_by column. You can also do the reverse to om
 Next, override the static properties `CREATED_BY` and `UPDATED_BY` in your model (that extends the base model) to set the omitted property to null like so:
 
 ```php
-class BaseModel extends BaseModel
+class YourModel extends BaseModel
 {
     public static $CREATED_BY = 'created_by';
     public static $UPDATED_BY = null;
