@@ -1,0 +1,38 @@
+{
+    "name": "insenseanalytics/laravel-user-audit-trails",
+    "description": "User audit trails for Laravel Eloquent.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Paras Malhotra",
+            "email": "paras@insenseanalytics.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "illuminate/support": "~5.5.0|~5.6.0",
+        "illuminate/database": "~5.5.0|~5.6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Insense\\LaravelUserAuditTrails\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Insense\\LaravelUserAuditTrails\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0|^7.0",
+        "orchestra/testbench": "~3.5.0|~3.6.0",
+        "doctrine/dbal": "~2.6"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Insense\\LaravelUserAuditTrails\\UserTrailsServiceProvider"
+            ]
+        }
+    }
+}
