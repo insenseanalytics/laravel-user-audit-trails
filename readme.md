@@ -88,4 +88,4 @@ We are open to PRs as long as they're backed by tests and a small description of
 
 ## License
 
-The MIT License (MIT). Please see [License File](https://github.com/insenseanalytics/laravel-user-audit-trails/blob/master/LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](https://github.com/insenseanalytics/laravel-user-audit-trails/blob/master/LICENSE.txt) for more information.
