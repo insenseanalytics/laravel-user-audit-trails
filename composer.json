@@ -1,6 +1,12 @@
 {
     "name": "insenseanalytics/laravel-user-audit-trails",
     "description": "User audit trails for Laravel Eloquent.",
+    "keywords": [
+        "laravel",
+        "audit trails",
+        "audit",
+        "user trails"
+    ],
     "license": "MIT",
     "authors": [
         {
