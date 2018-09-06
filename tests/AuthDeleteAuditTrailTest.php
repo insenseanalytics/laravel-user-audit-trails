@@ -2,9 +2,6 @@
 
 namespace Insense\LaravelUserAuditTrails\Tests;
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Capsule\Manager as DB;
-
 class AuthDeleteAuditTrailTest extends TestCase
 {
     /** @test */
