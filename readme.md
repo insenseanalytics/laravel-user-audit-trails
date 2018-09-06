@@ -12,36 +12,20 @@ This package is created to add audit user trails by using Laravel Eloquent ORM. 
 Add the audit trail columns in your database **migrations** like so:
 
 ```php
-$table->usertrails();
+$table->usertrails(); // for created_by, updated_by
+$table->deletetrails(); // for deleted_by
 ```
 
-Add the delete trail column like:
-
-```php
-$table->deletetrails();
-```
-
-Next, in your model just use the `HasUserTrails` trait to automatically setup audit user trails like so:
+Next, in your model just use the `HasUserTrails` and `HasDeleteTrails` trait to automatically setup audit user trails like so:
 ```php
 class Post extends \Illuminate\Database\Eloquent\Model
 {
-    use \Insense\LaravelUserAuditTrails\HasUserTrails;
-}
-```
-
-If you are using delete trail, then add `HasDeleteTrails` trait to models. 
-
-```php
-class Post extends \Illuminate\Database\Eloquent\Model
-{
-    use \Illuminate\Database\Eloquent\SoftDeletes;
     use \Insense\LaravelUserAuditTrails\HasUserTrails;
     use \Insense\LaravelUserAuditTrails\HasDeleteTrails;
-    
 }
 ```
 
-That's it! Now, sit back and observe the magic of audit user trails. When a new record is created, `created_by` will be updated to the user ID that created it. When a record is updated, `updated_by` will be updated to the user ID that updated it. When a record is soft deleted, `deleted_by` will be updated to the user ID that deleted it, if used `HasDeleteTrails` in `softDelete` models.
+That's it! Now, sit back and observe the magic of audit user trails. When a new record is created, `created_by` will be updated to the user ID that created it. When a record is updated, `updated_by` will be updated to the user ID that updated it. When a record is soft deleted, `deleted_by` will be updated to the user ID that deleted it.
 
 ## Requirements
 - [PHP >= 7.1](http://php.net/)
@@ -62,18 +46,15 @@ Register provider on your `config/app.php` file.
 ```
 
 ## Setting Up Custom Column Names
-If you want to override the default audit trail names of `created_by` and `updated_by`, you may do so like so:
+If you want to override the default audit trail names of `created_by`, `updated_by` and `deleted_by`, you may do so like so:
 
 In your database **migration**, add the audit trail columns like so:
 ```php
 $table->usertrails('your-created-by-column', 'your-updated-by-column');
+$table->deletetrails('your-deleted-by-column');
 ```
-Similarly for delete trail, `deleted_by` can override as : 
 
-```php
-$table->dropDeletetrails('your-created-by-column');
-```
-Next, in your model, override the static properties `CREATED_BY` and `UPDATED_BY`. Note that PHP does not allow overriding static properties in the same class, so you would need to extend your model class from a base model class that uses the `\Insense\LaravelUserAuditTrails\HasUserTrails` trait like so:
+Next, in your model, override the static properties `CREATED_BY`, `UPDATED_BY` and `DELETED_BY`. Note that PHP does not allow overriding static properties in the same class, so you would need to extend your model class from a base model class that uses the `\Insense\LaravelUserAuditTrails\HasUserTrails` trait like so:
 
 First create your base model class (if not already created). If already created, just add the trait.
 
@@ -83,23 +64,13 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     use \Insense\LaravelUserAuditTrails\HasUserTrails;
 }
 ```
-Next, override the static properties `CREATED_BY` and `UPDATED_BY` in your model (that extends the base model) like so:
+Next, override the static properties `CREATED_BY`, `UPDATED_BY` and `DELETED_BY` in your model (that extends the base model) like so:
 
 ```php
 class YourModel extends BaseModel
 {
     public static $CREATED_BY = 'your-created-by-column';
     public static $UPDATED_BY = 'your-updated-by-column';
-}
-```
-
-Similarly, for delete trail, in your soft deleted model, override the static properties `DELETED_BY` as :
-
-```php
-class YourModel extends BaseModel
-{
-    use \Illuminate\Database\Eloquent\SoftDeletes;
-    use \Insense\LaravelUserAuditTrails\HasDeleteTrails;
     public static $DELETED_BY = 'your-deleted-by-column';
 }
 ```
