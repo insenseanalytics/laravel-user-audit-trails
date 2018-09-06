@@ -78,23 +78,23 @@ class SimpleAuditTrailTest extends TestCase
     /** @test */
     public function it_checks_the_audit_user_delete_trail_columns()
     {
-        $this->assertTrue(DB::schema()->hasColumn('posts_dt', 'deleted_by'));
-        $this->assertTrue(DB::schema()->hasColumn('comments_dt', 'deletedBy'));
-        $this->assertTrue(DB::schema()->hasColumn('pages_dt', 'deletedByUserId'));
+        $this->assertTrue(DB::schema()->hasColumn('post_dts', 'deleted_by'));
+        $this->assertTrue(DB::schema()->hasColumn('comment_dts', 'deletedBy'));
+        $this->assertFalse(DB::schema()->hasColumn('page_dts', 'deletedByUserId'));
     }
     
     /** @test */
     public function it_drops_the_audit_delete_trail_columns()
     {
         $this->dropDeleteTrailColumns();
-        $this->assertFalse(DB::schema()->hasColumn('posts_dt', 'deleted_by'));
+        $this->assertFalse(DB::schema()->hasColumn('post_dts', 'deleted_by'));
     }
     
     /** @test */
     public function it_drops_the_audit_delete_trail_custom_columns()
     {
         $this->dropDeleteTrailColumns();
-        $this->assertFalse(DB::schema()->hasColumn('comments_dt', 'deletedBy'));
+        $this->assertFalse(DB::schema()->hasColumn('comment_dts', 'deletedBy'));
     }
     
     /** @test */

@@ -8,22 +8,24 @@ use Illuminate\Database\Capsule\Manager as DB;
 class AuthDeleteAuditTrailTest extends TestCase
 {
     /** @test */
-    public function it_updates_created_deleted_audit_user_trails()
+    public function it_updates_updated_deleted_audit_user_trails()
     {
-        $user = $this->makeThirdUser();
-        $this->actingAs($user);
-        $post = $this->makePageDt();
+        $firstUser = $this->makeThirdUser();
+        $this->actingAs($firstUser);
+        $post = $this->makePostDt();
 
-        $this->assertSame($user->id, $post->created_by);
-        $this->assertSame($user->id, $post->updated_by);
+        $secondUser = $this->makeSecondUser();
+        $this->actingAs($secondUser);
 
         $post->delete();
-        $this->assertSame($user->id, $post->deleted_by);
+        $this->assertSame($firstUser->id, $post->created_by);
+        $this->assertSame($firstUser->id, $post->updated_by);
+        $this->assertSame($secondUser->id, $post->deleted_by);
 
     }
 
     /** @test */
-    public function it_updates_custom_created_deleted_audit_delete_trails()
+    public function it_updates_custom_created_updated_deleted_audit_delete_trails()
     {
         $user = $this->makeThirdUser();
         $this->actingAs($user);
@@ -32,24 +34,26 @@ class AuthDeleteAuditTrailTest extends TestCase
         $this->assertSame($user->id, $comment->createdBy);
         $this->assertSame($user->id, $comment->updatedBy);
         
-        $commentDT = $this->deleteCommentDT();
-        $this->assertSame($user->id, $commentDT->deletedBy);
+        $comment->delete();
+        $this->assertSame($user->id, $comment->deletedBy);
     }
 
     /** @test */
     public function it_updates_deleted_audit_user_info_to_latest_user_trails()
     {
-        $user = $this->makeThirdUser();
+        $firsrtUser = $this->makeThirdUser();
         $post = $this->makePostDt();
-        $this->actingAs($user);
+        $this->actingAs($firsrtUser);
         $post->delete();
-        $this->assertSame($user->id, $post->deleted_by);
+        $this->assertSame($firsrtUser->id, $post->deleted_by);
         
-        $user2 = $this->makeSecondUser();
-        $this->restorePostDT($post->id);
+        $secondUser = $this->makeSecondUser();
+        $this->actingAs($secondUser);
+        
+        $post->restore();
         $post->delete();
         
-        $this->assertSame($user2->id, $post->deleted_by);
+        $this->assertSame($secondUser->id, $post->deleted_by);
         
     }
 
@@ -69,4 +73,15 @@ class AuthDeleteAuditTrailTest extends TestCase
         $this->assertSame(7, $post->deleted_by);
     }
     
+    /** @test */
+    public function it_does_not_applied_non_using_deleted_trails()
+    {
+        $user = $this->makeThirdUser();
+        $this->actingAs($user);
+        $page = $this->makePageDt();
+
+        $this->assertSame($user->id, $page->created_by);
+        $this->assertTrue(is_null($page->updated_by));
+        $this->assertTrue(is_null($page->deleted_by));
+    }
 }

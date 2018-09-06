@@ -87,7 +87,7 @@ abstract class TestCase extends Orchestra
     }
     
     protected function migrateDeleteTrailstables() {
-        DB::schema()->create('posts_dt', function ($table) {
+        DB::schema()->create('post_dts', function ($table) {
             $table->increments('id');
             $table->string('title');
             $table->timestamps();
@@ -96,7 +96,7 @@ abstract class TestCase extends Orchestra
             $table->deletetrails();
         });
 
-        DB::schema()->create('comments_dt', function ($table) {
+        DB::schema()->create('comment_dts', function ($table) {
             $table->increments('id');
             $table->string('title');
             $table->timestamps();
@@ -105,12 +105,11 @@ abstract class TestCase extends Orchestra
             $table->deletetrails('deletedBy');
         });
 
-        DB::schema()->create('pages_dt', function ($table) {
+        DB::schema()->create('page_dts', function ($table) {
             $table->increments('id');
             $table->string('title');
             $table->timestamps();
             $table->usertrails('created_by', null);
-            $table->deletetrails('deletedByUserId');
         });
     }
 
@@ -131,17 +130,14 @@ abstract class TestCase extends Orchestra
     
     protected function dropDeleteTrailColumns()
     {
-        DB::schema()->table('posts_dt', function ($table) {
+        DB::schema()->table('post_dts', function ($table) {
             $table->dropDeletetrails();
         });
 
-        DB::schema()->table('comments_dt', function ($table) {
+        DB::schema()->table('comment_dts', function ($table) {
             $table->dropDeletetrails('deletedBy');
         });
 
-        DB::schema()->table('pages_dt', function ($table) {
-            $table->dropDeletetrails('deletedByUserId');
-        });
     }
 
     protected function makePost()
@@ -170,7 +166,7 @@ abstract class TestCase extends Orchestra
     
     protected function makePostDt()
     {
-        $post = new Post;
+        $post = new PostDT;
         $post->title = 'Some title';
         $post->save();
         return $post;
@@ -178,7 +174,7 @@ abstract class TestCase extends Orchestra
 
     protected function makeCommentDt()
     {
-        $comment = new Comment;
+        $comment = new CommentDT;
         $comment->title = 'Some title';
         $comment->save();
         return $comment;
@@ -186,7 +182,7 @@ abstract class TestCase extends Orchestra
 
     protected function makePageDt()
     {
-        $page = new Page;
+        $page = new PageDT;
         $page->title = 'Some title';
         $page->save();
         return $page;
@@ -276,28 +272,36 @@ class Page extends BaseModel
     public static $UPDATED_BY = null;
 }
 
-class PostDT extends Model
+class BaseModel2 extends Model
 {
     use HasUserTrails;
     use HasDeleteTrails;
-    use \Illuminate\Database\Eloquent\SoftDeletes;
 }
 
-class CommentDT extends BaseModel
+class PostDT extends BaseModel2
 {
-    use HasDeleteTrails;
     use \Illuminate\Database\Eloquent\SoftDeletes;
     
+    protected $table = "post_dts";
+}
+
+class CommentDT extends BaseModel2
+{
+    use \Illuminate\Database\Eloquent\SoftDeletes;
     public static $CREATED_BY = 'createdBy';
     public static $UPDATED_BY = 'updatedBy';
     public static $DELETED_BY = 'deletedBy';
+    
+    protected $table = "comment_dts";
 }
 
-class PageDT extends BaseModel
+class PageDT extends BaseModel2
 {
-    use HasDeleteTrails;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
     public static $UPDATED_BY = null;
     public static $DELETED_BY = 'deletedByUserId';
+    
+    protected $table = "page_dts";
 }
 
 class User extends Model implements Authenticatable
