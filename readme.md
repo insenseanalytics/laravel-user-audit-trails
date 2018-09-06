@@ -62,6 +62,7 @@ First create your base model class (if not already created). If already created,
 class BaseModel extends \Illuminate\Database\Eloquent\Model
 {
     use \Insense\LaravelUserAuditTrails\HasUserTrails;
+    use \Insense\LaravelUserAuditTrails\HasDeleteTrails;
 }
 ```
 Next, override the static properties `CREATED_BY`, `UPDATED_BY` and `DELETED_BY` in your model (that extends the base model) like so:
