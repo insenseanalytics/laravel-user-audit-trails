@@ -5,7 +5,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/?branch=master)
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 
-This package is created to add audit user trails by using Laravel Eloquent ORM. Using this package, you would be able to record in the respective database tables, the `created_by` and `updated_by` user IDs.
+This package is created to add audit user trails by using Laravel Eloquent ORM. Using this package, you would be able to record in the respective database tables, the `created_by`, `updated_by` and `deleted_by` user IDs.
 
 ## Basic Example
 
