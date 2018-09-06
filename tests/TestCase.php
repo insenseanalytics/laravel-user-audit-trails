@@ -229,16 +229,18 @@ abstract class TestCase extends Orchestra
         return $post->delete();
     }
 
-    protected function deleteComment()
+    protected function deleteCommentDT()
     {
-        $comment = CommentDT::latest()->first();;
-        return $comment->delete();
+        $comment = CommentDT::latest()->first();
+        $comment->delete();
+        return $comment;
     }
 
     protected function deletePageDT()
     {
         $page = PageDT::latest()->first();
-        return $page->delete();
+        $page->delete();
+        return $page;
     }
     
     protected function restorePostDT($id) {
