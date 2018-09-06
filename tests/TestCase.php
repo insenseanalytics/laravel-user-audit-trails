@@ -8,6 +8,7 @@ use Insense\LaravelUserAuditTrails\HasUserTrails;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Insense\LaravelUserAuditTrails\HasDeleteTrails;
 
 abstract class TestCase extends Orchestra
 {
@@ -19,6 +20,7 @@ abstract class TestCase extends Orchestra
         parent::setUp();
         $this->setUpDatabase();
         $this->migrateTables();
+        $this->migrateDeleteTrailstables();
     }
 
     protected function getPackageProviders($app)
@@ -83,6 +85,33 @@ abstract class TestCase extends Orchestra
             $table->usertrails('created_by', null);
         });
     }
+    
+    protected function migrateDeleteTrailstables() {
+        DB::schema()->create('post_dts', function ($table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->usertrails();
+            $table->deletetrails();
+        });
+
+        DB::schema()->create('comment_dts', function ($table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->usertrails('createdBy', 'updatedBy');
+            $table->deletetrails('deletedBy');
+        });
+
+        DB::schema()->create('page_dts', function ($table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->timestamps();
+            $table->usertrails('created_by', null);
+        });
+    }
 
     protected function dropUserTrailColumns()
     {
@@ -97,6 +126,18 @@ abstract class TestCase extends Orchestra
         DB::schema()->table('pages', function ($table) {
             $table->dropUsertrails('created_by', null);
         });
+    }
+    
+    protected function dropDeleteTrailColumns()
+    {
+        DB::schema()->table('post_dts', function ($table) {
+            $table->dropDeletetrails();
+        });
+
+        DB::schema()->table('comment_dts', function ($table) {
+            $table->dropDeletetrails('deletedBy');
+        });
+
     }
 
     protected function makePost()
@@ -122,6 +163,30 @@ abstract class TestCase extends Orchestra
         $page->save();
         return $page;
     }
+    
+    protected function makePostDt()
+    {
+        $post = new PostDT;
+        $post->title = 'Some title';
+        $post->save();
+        return $post;
+    }
+
+    protected function makeCommentDt()
+    {
+        $comment = new CommentDT;
+        $comment->title = 'Some title';
+        $comment->save();
+        return $comment;
+    }
+
+    protected function makePageDt()
+    {
+        $page = new PageDT;
+        $page->title = 'Some title';
+        $page->save();
+        return $page;
+    }
 
     protected function makeUser()
     {
@@ -142,6 +207,37 @@ abstract class TestCase extends Orchestra
         $user->save();
         return $user;
     }
+            
+    protected function deletePostDT()
+    {
+        $post = PostDT::latest()->first();
+        return $post->delete();
+    }
+
+    protected function deleteCommentDT()
+    {
+        $comment = CommentDT::latest()->first();
+        $comment->delete();
+        return $comment;
+    }
+
+    protected function deletePageDT()
+    {
+        $page = PageDT::latest()->first();
+        $page->delete();
+        return $page;
+    }
+    
+    protected function restorePostDT($id) {
+        $post = PostDT::withTrashed()->find($id);
+        return $post->trashed() ? $post->restore() :false;
+    }
+    
+    protected function restoreComment($id) {
+        $comment = CommentDT::withTrashed()->find($id);
+        return $comment->trashed() ? $comment->restore() : false;
+    }
+    
 }
 
 class BaseModel extends Model
@@ -163,6 +259,38 @@ class Comment extends BaseModel
 class Page extends BaseModel
 {
     public static $UPDATED_BY = null;
+}
+
+class BaseModel2 extends Model
+{
+    use HasUserTrails;
+    use HasDeleteTrails;
+}
+
+class PostDT extends BaseModel2
+{
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+    
+    protected $table = "post_dts";
+}
+
+class CommentDT extends BaseModel2
+{
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+    public static $CREATED_BY = 'createdBy';
+    public static $UPDATED_BY = 'updatedBy';
+    public static $DELETED_BY = 'deletedBy';
+    
+    protected $table = "comment_dts";
+}
+
+class PageDT extends BaseModel2
+{
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+    public static $UPDATED_BY = null;
+    public static $DELETED_BY = 'deletedByUserId';
+    
+    protected $table = "page_dts";
 }
 
 class User extends Model implements Authenticatable

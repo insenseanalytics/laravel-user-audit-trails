@@ -27,6 +27,14 @@ class UserTrailsServiceProvider extends ServiceProvider
             if (!is_null($updated_by)) {
                 $this->integer($updated_by)->unsigned()->nullable();
             }
+            return $this;
+        });
+        
+        Blueprint::macro('deletetrails', function ($deleted_by = 'deleted_by') {
+            if (!is_null($deleted_by)) {
+                $this->integer($deleted_by)->unsigned()->nullable();
+            }
+            return $this;
         });
 
         Blueprint::macro('dropUsertrails', function ($created_by = 'created_by', $updated_by = 'updated_by') {
@@ -38,7 +46,18 @@ class UserTrailsServiceProvider extends ServiceProvider
             if (!is_null($updated_by)) {
                 $columnsToDrop[] = $updated_by;
             }
-
+            
+            if (!empty($columnsToDrop)) {
+                $this->dropColumn($columnsToDrop);
+            }
+        });
+        
+        Blueprint::macro('dropDeletetrails', function ($deleted_by = 'deleted_by') {
+            $columnsToDrop = [];
+            if (!is_null($deleted_by)) {
+                $columnsToDrop[] = $deleted_by;
+            }
+            
             if (!empty($columnsToDrop)) {
                 $this->dropColumn($columnsToDrop);
             }
