@@ -66,4 +66,40 @@ class SimpleAuditTrailTest extends TestCase
         $this->assertTrue(is_null($post->created_by));
         $this->assertTrue(is_null($post->updated_by));
     }
+    
+       
+    /** @test */
+    public function it_provides_deletetrails_macro()
+    {
+        $this->assertTrue(Blueprint::hasMacro('deletetrails'));
+        $this->assertTrue(Blueprint::hasMacro('dropDeletetrails'));
+    }
+    
+    /** @test */
+    public function it_checks_the_audit_user_delete_trail_columns()
+    {
+        $this->assertTrue(DB::schema()->hasColumn('posts_dt', 'deleted_by'));
+        $this->assertTrue(DB::schema()->hasColumn('comments_dt', 'deletedBy'));
+        $this->assertTrue(DB::schema()->hasColumn('pages_dt', 'deletedByUserId'));
+    }
+    
+    /** @test */
+    public function it_drops_the_audit_delete_trail_columns()
+    {
+        $this->dropDeleteTrailColumns();
+        $this->assertFalse(DB::schema()->hasColumn('posts_dt', 'deleted_by'));
+    }
+    
+    /** @test */
+    public function it_drops_the_audit_delete_trail_custom_columns()
+    {
+        $this->dropDeleteTrailColumns();
+        $this->assertFalse(DB::schema()->hasColumn('comments_dt', 'deletedBy'));
+    }
+    
+    /** @test */
+    public function it_omits_non_soft_deleted_delete_trail_columns() {
+        $this->dropDeleteTrailColumns();
+        $this->assertFalse(DB::schema()->hasColumn('pages_dt', 'deletedByUserId'));  
+    }
 }

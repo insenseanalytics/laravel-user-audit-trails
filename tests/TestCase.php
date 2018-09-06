@@ -8,6 +8,7 @@ use Insense\LaravelUserAuditTrails\HasUserTrails;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Insense\LaravelUserAuditTrails\HasDeleteTrails;
 
 abstract class TestCase extends Orchestra
 {
@@ -19,6 +20,7 @@ abstract class TestCase extends Orchestra
         parent::setUp();
         $this->setUpDatabase();
         $this->migrateTables();
+        $this->migrateDeleteTrailstables();
     }
 
     protected function getPackageProviders($app)
@@ -83,6 +85,34 @@ abstract class TestCase extends Orchestra
             $table->usertrails('created_by', null);
         });
     }
+    
+    protected function migrateDeleteTrailstables() {
+        DB::schema()->create('posts_dt', function ($table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->usertrails();
+            $table->deletetrails();
+        });
+
+        DB::schema()->create('comments_dt', function ($table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->usertrails('createdBy', 'updatedBy');
+            $table->deletetrails('deletedBy');
+        });
+
+        DB::schema()->create('pages_dt', function ($table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->timestamps();
+            $table->usertrails('created_by', null);
+            $table->deletetrails('deletedByUserId');
+        });
+    }
 
     protected function dropUserTrailColumns()
     {
@@ -96,6 +126,21 @@ abstract class TestCase extends Orchestra
 
         DB::schema()->table('pages', function ($table) {
             $table->dropUsertrails('created_by', null);
+        });
+    }
+    
+    protected function dropDeleteTrailColumns()
+    {
+        DB::schema()->table('posts_dt', function ($table) {
+            $table->dropDeletetrails();
+        });
+
+        DB::schema()->table('comments_dt', function ($table) {
+            $table->dropDeletetrails('deletedBy');
+        });
+
+        DB::schema()->table('pages_dt', function ($table) {
+            $table->dropDeletetrails('deletedByUserId');
         });
     }
 
@@ -122,6 +167,30 @@ abstract class TestCase extends Orchestra
         $page->save();
         return $page;
     }
+    
+    protected function makePostDt()
+    {
+        $post = new Post;
+        $post->title = 'Some title';
+        $post->save();
+        return $post;
+    }
+
+    protected function makeCommentDt()
+    {
+        $comment = new Comment;
+        $comment->title = 'Some title';
+        $comment->save();
+        return $comment;
+    }
+
+    protected function makePageDt()
+    {
+        $page = new Page;
+        $page->title = 'Some title';
+        $page->save();
+        return $page;
+    }
 
     protected function makeUser()
     {
@@ -142,6 +211,46 @@ abstract class TestCase extends Orchestra
         $user->save();
         return $user;
     }
+    
+    protected function makeThirdUser()
+    {
+        $user = new User;
+        $user->first_name = 'Amit';
+        $user->last_name = 'Kumar';
+        $user->email = 'amit@test.com';
+        $user->save();
+        return $user;
+    }
+    
+        
+    protected function deletePostDT()
+    {
+        $post = PostDT::latest()->first();
+        return $post->delete();
+    }
+
+    protected function deleteComment()
+    {
+        $comment = CommentDT::latest()->first();;
+        return $comment->delete();
+    }
+
+    protected function deletePageDT()
+    {
+        $page = PageDT::latest()->first();
+        return $page->delete();
+    }
+    
+    protected function restorePostDT($id) {
+        $post = PostDT::withTrashed()->find($id);
+        return $post->trashed() ? $post->restore() :false;
+    }
+    
+    protected function restoreComment($id) {
+        $comment = CommentDT::withTrashed()->find($id);
+        return $comment->trashed() ? $comment->restore() : false;
+    }
+    
 }
 
 class BaseModel extends Model
@@ -163,6 +272,30 @@ class Comment extends BaseModel
 class Page extends BaseModel
 {
     public static $UPDATED_BY = null;
+}
+
+class PostDT extends Model
+{
+    use HasUserTrails;
+    use HasDeleteTrails;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+}
+
+class CommentDT extends BaseModel
+{
+    use HasDeleteTrails;
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+    
+    public static $CREATED_BY = 'createdBy';
+    public static $UPDATED_BY = 'updatedBy';
+    public static $DELETED_BY = 'deletedBy';
+}
+
+class PageDT extends BaseModel
+{
+    use HasDeleteTrails;
+    public static $UPDATED_BY = null;
+    public static $DELETED_BY = 'deletedByUserId';
 }
 
 class User extends Model implements Authenticatable
