@@ -99,7 +99,6 @@ class SimpleAuditTrailTest extends TestCase
     
     /** @test */
     public function it_omits_non_soft_deleted_delete_trail_columns() {
-        $this->dropDeleteTrailColumns();
-        $this->assertFalse(DB::schema()->hasColumn('pages_dt', 'deletedByUserId'));  
+        $this->assertFalse(DB::schema()->hasColumn('pages_dt', 'deleted_by'));  
     }
 }

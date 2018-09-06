@@ -7,7 +7,7 @@ class AuthDeleteAuditTrailTest extends TestCase
     /** @test */
     public function it_updates_updated_deleted_audit_user_trails()
     {
-        $firstUser = $this->makeThirdUser();
+        $firstUser = $this->makeUser();
         $this->actingAs($firstUser);
         $post = $this->makePostDt();
 
@@ -24,7 +24,7 @@ class AuthDeleteAuditTrailTest extends TestCase
     /** @test */
     public function it_updates_custom_created_updated_deleted_audit_delete_trails()
     {
-        $user = $this->makeThirdUser();
+        $user = $this->makeUser();
         $this->actingAs($user);
         $comment = $this->makeCommentDt();
 
@@ -38,7 +38,7 @@ class AuthDeleteAuditTrailTest extends TestCase
     /** @test */
     public function it_updates_deleted_audit_user_info_to_latest_user_trails()
     {
-        $firsrtUser = $this->makeThirdUser();
+        $firsrtUser = $this->makeUser();
         $post = $this->makePostDt();
         $this->actingAs($firsrtUser);
         $post->delete();
@@ -71,9 +71,9 @@ class AuthDeleteAuditTrailTest extends TestCase
     }
     
     /** @test */
-    public function it_does_not_applied_non_using_deleted_trails()
+    public function it_does_not_get_applied_if_not_using_deleted_trails()
     {
-        $user = $this->makeThirdUser();
+        $user = $this->makeUser();
         $this->actingAs($user);
         $page = $this->makePageDt();
 

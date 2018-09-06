@@ -41,22 +41,6 @@ trait HasDeleteTrails
         return in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this)) && !$this->isForceDeleting();
     }
 
-    /*
-     * Update the model's user audit trails.
-     *
-     * @return bool
-     */
-    public function touchDeleteTrails()
-    {
-        if (!$this->usesDeleteTrails()) {
-            return false;
-        }
-
-        $this->updateDeleteTrails();
-
-        return $this->save();
-    }
-
     /**
      * Update the deleted by user audit trails.
      */

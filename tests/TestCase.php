@@ -207,18 +207,7 @@ abstract class TestCase extends Orchestra
         $user->save();
         return $user;
     }
-    
-    protected function makeThirdUser()
-    {
-        $user = new User;
-        $user->first_name = 'Amit';
-        $user->last_name = 'Kumar';
-        $user->email = 'amit@test.com';
-        $user->save();
-        return $user;
-    }
-    
-        
+            
     protected function deletePostDT()
     {
         $post = PostDT::latest()->first();

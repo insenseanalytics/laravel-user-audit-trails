@@ -15,6 +15,12 @@ Add the audit trail columns in your database **migrations** like so:
 $table->usertrails();
 ```
 
+Add the delete trail column like:
+
+```php
+$table->deletetrails();
+```
+
 Next, in your model just use the `HasUserTrails` trait to automatically setup audit user trails like so:
 ```php
 class Post extends \Illuminate\Database\Eloquent\Model
@@ -23,7 +29,19 @@ class Post extends \Illuminate\Database\Eloquent\Model
 }
 ```
 
-That's it! Now, sit back and observe the magic of audit user trails. When a new record is created, `created_by` will be updated to the user ID that created it. When a record is updated, `updated_by` will be updated to the user ID that updated it.
+If you are using delete trail, then add `HasDeleteTrails` trait to models. 
+
+```php
+class Post extends \Illuminate\Database\Eloquent\Model
+{
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+    use \Insense\LaravelUserAuditTrails\HasUserTrails;
+    use \Insense\LaravelUserAuditTrails\HasDeleteTrails;
+    
+}
+```
+
+That's it! Now, sit back and observe the magic of audit user trails. When a new record is created, `created_by` will be updated to the user ID that created it. When a record is updated, `updated_by` will be updated to the user ID that updated it. When a record is soft deleted, `deleted_by` will be updated to the user ID that deleted it, if used `HasDeleteTrails` in `softDelete` models.
 
 ## Requirements
 - [PHP >= 7.1](http://php.net/)
@@ -50,6 +68,11 @@ In your database **migration**, add the audit trail columns like so:
 ```php
 $table->usertrails('your-created-by-column', 'your-updated-by-column');
 ```
+Similarly for delete trail, `deleted_by` can override as : 
+
+```php
+$table->dropDeletetrails('your-created-by-column');
+```
 Next, in your model, override the static properties `CREATED_BY` and `UPDATED_BY`. Note that PHP does not allow overriding static properties in the same class, so you would need to extend your model class from a base model class that uses the `\Insense\LaravelUserAuditTrails\HasUserTrails` trait like so:
 
 First create your base model class (if not already created). If already created, just add the trait.
@@ -70,6 +93,17 @@ class YourModel extends BaseModel
 }
 ```
 
+Similarly, for delete trail, in your soft deleted model, override the static properties `DELETED_BY` as :
+
+```php
+class YourModel extends BaseModel
+{
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+    use \Insense\LaravelUserAuditTrails\HasDeleteTrails;
+    public static $DELETED_BY = 'your-deleted-by-column';
+}
+```
+ 
 ## Omitting Updated By or Created By Columns
 If you wish to omit one of the audit trail columns, you can just set the one you would like to omit to null in your database **migration** like so:
 
