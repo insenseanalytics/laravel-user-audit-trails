@@ -1,10 +1,10 @@
 # Insense/LaravelUserAuditTrails
 
 ![Travis (.org)](https://img.shields.io/travis/insenseanalytics/laravel-user-audit-trails/master.svg)
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://packagist.org/packages/insenseanalytics/laravel-user-audit-trails)
+[![License](https://poser.pugx.org/insenseanalytics/laravel-user-audit-trails/license)](https://packagist.org/packages/insenseanalytics/laravel-user-audit-trails)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/?branch=master)
-[![Code Intelligence Status](https://scrutinizer-ci.com/g/insenseanalytics/laravel-user-audit-trails/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
-![Packagist](https://img.shields.io/packagist/dt/insenseanalytics/laravel-user-audit-trails.svg)
+[![Latest Stable Version](https://poser.pugx.org/insenseanalytics/laravel-user-audit-trails/v/stable)](https://packagist.org/packages/insenseanalytics/laravel-user-audit-trails)
+[![Total Downloads](https://poser.pugx.org/insenseanalytics/laravel-user-audit-trails/downloads)](https://packagist.org/packages/insenseanalytics/laravel-user-audit-trails)
 
 This package is created to add audit user trails by using Laravel Eloquent ORM. Using this package, you would be able to record in the respective database tables, the `created_by`, `updated_by` and `deleted_by` user IDs.
 
