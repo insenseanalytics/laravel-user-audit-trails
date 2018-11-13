@@ -1,4 +1,4 @@
-# Insense/LaravelUserAuditTrails
+# Laravel User Audit Trails
 
 ![Travis (.org)](https://img.shields.io/travis/insenseanalytics/laravel-user-audit-trails/master.svg)
 [![License](https://poser.pugx.org/insenseanalytics/laravel-user-audit-trails/license)](https://packagist.org/packages/insenseanalytics/laravel-user-audit-trails)
