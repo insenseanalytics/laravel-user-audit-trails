@@ -14,8 +14,10 @@ abstract class TestCase extends Orchestra
 {
     /**
      * Setup the test environment.
+     *
+     * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->setUpDatabase();
@@ -86,7 +88,8 @@ abstract class TestCase extends Orchestra
         });
     }
     
-    protected function migrateDeleteTrailstables() {
+    protected function migrateDeleteTrailstables()
+    {
         DB::schema()->create('post_dts', function ($table) {
             $table->increments('id');
             $table->string('title');
@@ -137,7 +140,6 @@ abstract class TestCase extends Orchestra
         DB::schema()->table('comment_dts', function ($table) {
             $table->dropDeletetrails('deletedBy');
         });
-
     }
 
     protected function makePost()
@@ -228,16 +230,17 @@ abstract class TestCase extends Orchestra
         return $page;
     }
     
-    protected function restorePostDT($id) {
+    protected function restorePostDT($id)
+    {
         $post = PostDT::withTrashed()->find($id);
         return $post->trashed() ? $post->restore() :false;
     }
     
-    protected function restoreComment($id) {
+    protected function restoreComment($id)
+    {
         $comment = CommentDT::withTrashed()->find($id);
         return $comment->trashed() ? $comment->restore() : false;
     }
-    
 }
 
 class BaseModel extends Model
