@@ -30,7 +30,7 @@ That's it! Now, sit back and observe the magic of audit user trails. When a new 
 
 ## Requirements
 - [PHP >= 7.1](http://php.net/)
-- [Laravel 5.5|5.6|5.7|5.8|6.x]7.x]8.x](https://github.com/laravel/framework)
+- [Laravel 5.5+|6.x|7.x|8.x](https://github.com/laravel/framework)
 
 ## Quick Installation
 ```bash
